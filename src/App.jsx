@@ -4,7 +4,7 @@ import Layout from "./navigation/Layout.jsx";
 import Contacts from "./Contacts.jsx";
 
 // Your Render backend URL
-const API_URL = "https://cs3870-backend-b6cu.onrender.com/";
+const API_URL = "https://cs3870-backend-b6cu.onrender.com";
 
 // ----------------------
 // Simple Home Component
