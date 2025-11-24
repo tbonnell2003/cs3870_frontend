@@ -3,21 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-
-    "homepage": "https://tbonnell2003.github.io/cs3870_frontend",
-    "repository": {
-  "type": "git",
-  "url": "https://github.com/tbonnell2003/cs3870_frontend.git"
-},
-
-
+  "homepage": "https://tbonnell2003.github.io/cs3870_frontend",
+  
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist --repo https://github.com/tbonnell2003/cs3870_frontend.git"
+    "deploy": "gh-pages -d dist"  
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
