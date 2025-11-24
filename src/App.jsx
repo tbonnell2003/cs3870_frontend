@@ -251,7 +251,6 @@ function App() {
             </Layout>
           }
         />
-
         <Route
           path="/contacts"
           element={
@@ -260,7 +259,6 @@ function App() {
             </Layout>
           }
         />
-
         <Route
           path="/add"
           element={
@@ -269,7 +267,6 @@ function App() {
             </Layout>
           }
         />
-
         <Route
           path="/delete"
           element={
@@ -278,7 +275,6 @@ function App() {
             </Layout>
           }
         />
-
         <Route
           path="/update"
           element={
@@ -287,12 +283,11 @@ function App() {
             </Layout>
           }
         />
-
-        {/* fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
 }
+
 
 export default App;
