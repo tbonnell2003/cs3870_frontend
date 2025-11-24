@@ -1,29 +1,34 @@
 import { useState, useEffect } from "react";
 
+// ⭐ IMPORTANT: Update with your actual Render backend URL
+const API_URL = "https://cs3870-backend-b6cu.onrender.com/";
+
 const Contacts = () => {
   const [contacts, setContacts] = useState([]);
   const [singleContact, setSingleContact] = useState(null);
   const [searchName, setSearchName] = useState("");
   const [error, setError] = useState("");
 
-  // Fetch all contacts on page load
+  // Fetch ALL contacts on page load
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const response = await fetch("http://localhost:8081/contacts");
+        const response = await fetch(`${API_URL}/contacts`);
         if (!response.ok) {
           throw new Error("Failed to fetch contacts");
         }
         const data = await response.json();
         setContacts(data);
       } catch (err) {
+        console.error(err);
         setError("Error loading contacts");
       }
     };
+
     fetchContacts();
   }, []);
 
-  // Fetch one contact by name
+  // Fetch ONE contact by name
   const handleSearch = async (e) => {
     e.preventDefault();
     setSingleContact(null);
@@ -32,16 +37,19 @@ const Contacts = () => {
     const encodedName = encodeURIComponent(searchName.trim());
 
     try {
-      const response = await fetch(`http://localhost:8081/contacts/${encodedName}`);
+      const response = await fetch(`${API_URL}/contacts/${encodedName}`);
+
       if (response.status === 404) {
         throw new Error("Contact not found");
       }
       if (!response.ok) {
         throw new Error("Failed to fetch contact");
       }
+
       const data = await response.json();
       setSingleContact(data);
     } catch (err) {
+      console.error(err);
       setError(err.message);
     }
   };
@@ -50,7 +58,7 @@ const Contacts = () => {
     <div className="container">
       <h2 className="text-center mt-4">Contacts List</h2>
 
-      {/* Search box */}
+      {/* Search Box */}
       <form onSubmit={handleSearch} className="my-4 d-flex gap-2">
         <input
           className="form-control"
@@ -64,13 +72,14 @@ const Contacts = () => {
         </button>
       </form>
 
-      {/* Display single contact if found */}
+      {/* Display a Single Contact */}
       {singleContact && (
         <div className="card mb-4">
           <div className="card-body">
             <h4>{singleContact.contact_name}</h4>
             <p>Phone: {singleContact.phone_number}</p>
             <p>Message: {singleContact.message}</p>
+
             {singleContact.image_url && (
               <img
                 src={singleContact.image_url}
@@ -82,10 +91,10 @@ const Contacts = () => {
         </div>
       )}
 
-      {/* Error display */}
+      {/* Error Message */}
       {error && <p className="text-danger">{error}</p>}
 
-      {/* Full list of contacts */}
+      {/* Full List of Contacts */}
       <ul className="list-group">
         {contacts.map((contact) => (
           <li
@@ -104,8 +113,10 @@ const Contacts = () => {
                 }}
               />
             )}
+
             <div>
-              <strong>{contact.contact_name}</strong> - {contact.phone_number}
+              <strong>{contact.contact_name}</strong> -{" "}
+              {contact.phone_number}
               <p>{contact.message}</p>
             </div>
           </li>

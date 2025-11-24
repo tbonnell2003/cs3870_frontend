@@ -4,7 +4,8 @@ export default function Layout({ title, children }) {
   return (
     <div className="container-fluid py-4">
       <div className="row g-4">
-        {/* Left nav */}
+
+        {/* Left Navigation */}
         <div className="col-12 col-md-4 col-lg-3">
           <Sidebar />
         </div>
@@ -16,6 +17,7 @@ export default function Layout({ title, children }) {
             {children}
           </div>
         </div>
+
       </div>
     </div>
   );

@@ -3,8 +3,17 @@ import { useState } from "react";
 import Layout from "./navigation/Layout.jsx";
 import Contacts from "./Contacts.jsx";
 
-// Temporary placeholders
+// Your Render backend URL
+const API_URL = "https://cs3870-backend-b6cu.onrender.com";
+
+// ----------------------
+// Simple Home Component
+// ----------------------
 const Home = () => <p>Welcome.</p>;
+
+// ----------------------
+// ADD CONTACT
+// ----------------------
 const AddContact = () => {
   const [contact_name, setName] = useState("");
   const [phone_number, setPhone] = useState("");
@@ -14,7 +23,7 @@ const AddContact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8081/contacts", {
+      const response = await fetch(`${API_URL}/contacts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ contact_name, phone_number, message, image_url }),
@@ -46,6 +55,7 @@ const AddContact = () => {
           required
         />
       </div>
+
       <div>
         <label className="form-label">Phone Number</label>
         <input
@@ -55,6 +65,7 @@ const AddContact = () => {
           required
         />
       </div>
+
       <div>
         <label className="form-label">Message</label>
         <input
@@ -64,15 +75,16 @@ const AddContact = () => {
           required
         />
       </div>
+
       <div>
         <label className="form-label">Image URL</label>
         <input
           className="form-control"
           value={image_url}
           onChange={(e) => setImageUrl(e.target.value)}
-          required
         />
       </div>
+
       <button className="btn btn-primary" type="submit">
         Add Contact
       </button>
@@ -80,17 +92,19 @@ const AddContact = () => {
   );
 };
 
+// ----------------------
+// DELETE CONTACT
+// ----------------------
 const DeleteContact = () => {
   const [name, setName] = useState("");
 
   const handleDelete = async (e) => {
     e.preventDefault();
+
     try {
       const response = await fetch(
-        `http://localhost:8081/contacts/${encodeURIComponent(name)}`,
-        {
-          method: "DELETE",
-        }
+        `${API_URL}/contacts/${encodeURIComponent(name)}`,
+        { method: "DELETE" }
       );
 
       if (response.status === 204) {
@@ -117,6 +131,7 @@ const DeleteContact = () => {
           required
         />
       </div>
+
       <button className="btn btn-danger" type="submit">
         Delete
       </button>
@@ -124,6 +139,9 @@ const DeleteContact = () => {
   );
 };
 
+// ----------------------
+// UPDATE CONTACT
+// ----------------------
 const UpdateContact = () => {
   const [oldName, setOldName] = useState("");
   const [contact_name, setName] = useState("");
@@ -133,9 +151,10 @@ const UpdateContact = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+
     try {
       const response = await fetch(
-        `http://localhost:8081/contacts/${encodeURIComponent(oldName)}`,
+        `${API_URL}/contacts/${encodeURIComponent(oldName)}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -170,6 +189,7 @@ const UpdateContact = () => {
           required
         />
       </div>
+
       <div>
         <label className="form-label">New Name</label>
         <input
@@ -179,6 +199,7 @@ const UpdateContact = () => {
           required
         />
       </div>
+
       <div>
         <label className="form-label">New Phone</label>
         <input
@@ -188,6 +209,7 @@ const UpdateContact = () => {
           required
         />
       </div>
+
       <div>
         <label className="form-label">New Message</label>
         <input
@@ -197,15 +219,16 @@ const UpdateContact = () => {
           required
         />
       </div>
+
       <div>
         <label className="form-label">New Image URL</label>
         <input
           className="form-control"
           value={image_url}
           onChange={(e) => setImageUrl(e.target.value)}
-          required
         />
       </div>
+
       <button className="btn btn-warning" type="submit">
         Update
       </button>
@@ -213,10 +236,12 @@ const UpdateContact = () => {
   );
 };
 
-
+// ----------------------
+// MAIN APP ROUTES
+// ----------------------
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/cs3870_frontend">
       <Routes>
         <Route
           path="/"
@@ -226,6 +251,7 @@ function App() {
             </Layout>
           }
         />
+
         <Route
           path="/contacts"
           element={
@@ -234,6 +260,7 @@ function App() {
             </Layout>
           }
         />
+
         <Route
           path="/add"
           element={
@@ -242,6 +269,7 @@ function App() {
             </Layout>
           }
         />
+
         <Route
           path="/delete"
           element={
@@ -250,6 +278,7 @@ function App() {
             </Layout>
           }
         />
+
         <Route
           path="/update"
           element={
@@ -258,7 +287,8 @@ function App() {
             </Layout>
           }
         />
-        {/* default */}
+
+        {/* fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
