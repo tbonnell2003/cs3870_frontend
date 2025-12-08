@@ -1,11 +1,8 @@
-// import { useState, useEffect } from "react";
-
-
-// const API_URL = "https://cs3870-backend-b6cu.onrender.com";
-
 import { useState, useEffect } from "react";
-import { BASE_URL } from "./config.js";
-const API_URL = BASE_URL;
+
+
+const API_URL = "https://cs3870-backend-1-f13g.onrender.com";
+
 
 const Contacts = () => {
   const [contacts, setContacts] = useState([]);
