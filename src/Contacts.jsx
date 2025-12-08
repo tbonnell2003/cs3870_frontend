@@ -1,7 +1,11 @@
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 
-// ⭐ IMPORTANT: Update with your actual Render backend URL
-const API_URL = "https://cs3870-backend-b6cu.onrender.com";
+
+// const API_URL = "https://cs3870-backend-b6cu.onrender.com";
+
+import { useState, useEffect } from "react";
+import { BASE_URL } from "./config.js";
+const API_URL = BASE_URL;
 
 const Contacts = () => {
   const [contacts, setContacts] = useState([]);

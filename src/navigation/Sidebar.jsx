@@ -23,6 +23,14 @@ export default function Sidebar() {
         <NavLink to="/update" className="nav-link border rounded-3 px-3 py-2">
           Update contact
         </NavLink>
+
+        {/* New links */}
+        <NavLink to="/signup" className="nav-link border rounded-3 px-3 py-2">
+          Signup
+        </NavLink>
+        <NavLink to="/login" className="nav-link border rounded-3 px-3 py-2">
+          Login
+        </NavLink>
       </nav>
     </aside>
   );

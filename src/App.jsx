@@ -2,28 +2,41 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
 import Layout from "./navigation/Layout.jsx";
 import Contacts from "./Contacts.jsx";
-
-// ⭐ IMPORTANT: your Render backend URL
-const API_URL = "https://cs3870-backend-b6cu.onrender.com";
+import Signup from "./Signup.jsx";
+import Login from "./Login.jsx";
+import { BASE_URL } from "./config.js";
 
 // Simple Home Page
 const Home = () => <p>Welcome.</p>;
 
 // -----------------------------------------------
-// ADD CONTACT
+// ADD CONTACT (now sends JWT token if present)
 // -----------------------------------------------
 const AddContact = () => {
   const [contact_name, setName] = useState("");
   const [phone_number, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [image_url, setImageUrl] = useState("");
+  const [responseMsg, setResponseMsg] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setResponseMsg("");
+
+    // Read token from localStorage
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setResponseMsg("You must login first to add a contact.");
+      return;
+    }
+
     try {
-      const response = await fetch(`${API_URL}/contacts`, {
+      const response = await fetch(`${BASE_URL}/contacts`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           contact_name,
           phone_number,
@@ -32,67 +45,77 @@ const AddContact = () => {
         }),
       });
 
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.message || "Failed to add contact");
-      }
+      const data = await response.json().catch(() => ({}));
 
-      alert("Contact added!");
-      setName("");
-      setPhone("");
-      setMessage("");
-      setImageUrl("");
+      if (response.ok) {
+        setResponseMsg(data.message || "Contact added!");
+        setName("");
+        setPhone("");
+        setMessage("");
+        setImageUrl("");
+      } else if (response.status === 401 || response.status === 403) {
+        setResponseMsg(
+          data.detail ||
+            "Not authorized. Please login again to get a new token."
+        );
+      } else {
+        setResponseMsg(data.message || "Failed to add contact");
+      }
     } catch (error) {
-      alert("Error: " + error.message);
+      setResponseMsg("Error: " + error.message);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
-      <div>
-        <label className="form-label">Name</label>
-        <input
-          className="form-control"
-          value={contact_name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-      </div>
+    <>
+      <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
+        <div>
+          <label className="form-label">Name</label>
+          <input
+            className="form-control"
+            value={contact_name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
 
-      <div>
-        <label className="form-label">Phone Number</label>
-        <input
-          className="form-control"
-          value={phone_number}
-          onChange={(e) => setPhone(e.target.value)}
-          required
-        />
-      </div>
+        <div>
+          <label className="form-label">Phone Number</label>
+          <input
+            className="form-control"
+            value={phone_number}
+            onChange={(e) => setPhone(e.target.value)}
+            required
+          />
+        </div>
 
-      <div>
-        <label className="form-label">Message</label>
-        <input
-          className="form-control"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          required
-        />
-      </div>
+        <div>
+          <label className="form-label">Message</label>
+          <input
+            className="form-control"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            required
+          />
+        </div>
 
-      <div>
-        <label className="form-label">Image URL</label>
-        <input
-          className="form-control"
-          value={image_url}
-          onChange={(e) => setImageUrl(e.target.value)}
-          required
-        />
-      </div>
+        <div>
+          <label className="form-label">Image URL</label>
+          <input
+            className="form-control"
+            value={image_url}
+            onChange={(e) => setImageUrl(e.target.value)}
+            required
+          />
+        </div>
 
-      <button className="btn btn-primary" type="submit">
-        Add Contact
-      </button>
-    </form>
+        <button className="btn btn-primary" type="submit">
+          Add Contact
+        </button>
+      </form>
+
+      {responseMsg && <p className="mt-3">{responseMsg}</p>}
+    </>
   );
 };
 
@@ -107,7 +130,7 @@ const DeleteContact = () => {
 
     try {
       const response = await fetch(
-        `${API_URL}/contacts/${encodeURIComponent(name)}`,
+        `${BASE_URL}/contacts/${encodeURIComponent(name)}`,
         { method: "DELETE" }
       );
 
@@ -158,7 +181,7 @@ const UpdateContact = () => {
 
     try {
       const response = await fetch(
-        `${API_URL}/contacts/${encodeURIComponent(oldName)}`,
+        `${BASE_URL}/contacts/${encodeURIComponent(oldName)}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -289,6 +312,24 @@ function App() {
           element={
             <Layout title="Update Contact">
               <UpdateContact />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/signup"
+          element={
+            <Layout title="Signup">
+              <Signup />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/login"
+          element={
+            <Layout title="Login">
+              <Login />
             </Layout>
           }
         />
